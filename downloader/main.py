@@ -20,6 +20,7 @@ def main():
             html_parsed = BeautifulSoup(urllib2.urlopen(uri).read().decode("utf8"))
             
             thisArticle = article()
+            thisArticle.title = title
             
             inner_text = html_parsed.textarea.string
             inner_text_noRev = re.sub("{{.*?}}", "", inner_text)
