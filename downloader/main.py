@@ -3,6 +3,7 @@ import urllib2
 import re
 import cPickle
 import sys
+import os
 
 from article import article
 
@@ -10,6 +11,8 @@ from article import article
 
 def main():
     titles = open("title_list.csv", "r").read().split(',')
+    os.makedirs("./raw")
+    os.makedirs("../data")
 
     for title in titles:
         try:
