@@ -1,0 +1,1 @@
+These are python files from Beautiful Soup 4. We have just kept some of it. Please visit http://www.crummy.com/software/BeautifulSoup/ for all copyright related stuff.
