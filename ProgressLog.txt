@@ -1,0 +1,22 @@
+13/3:Baseline implementation:
+	=======================
+
+	1) API  : Download data
+	2) Bigram for summary comparison measure
+	3) Extractive summarization : graph-based approach
+
+14/3:extracted two summaries, one as intro paragraphs, another as first sentence of every paragraph. Measured similarity by cosine similarity of bag of words and bigrams. Performance: mostly 30% similarity, inconsistent with type of article. points:
+	- similarity measure might be wrong
+	- removal of wikipedia articles with tables
+	- tfidf needs to be tested
+	- summary length for 2 summaries (baseline and intro) differ, might cause problems
+	- two things to tackle: 
+	- can we use deep learning for text synthesis
+	- vectorizing of text doesn't keep ordering. better vectorization? word2vec?
+	- can/should we train a similarity measure? 
+		-(taking similar articles from different sources)
+			- from two different encyclopedias
+			- lang1 to lang2 to lang1 as similar articles for some lang2?
+				- using google and bing
+	- ask on reddit?
+	- LDA use?

@@ -2,22 +2,32 @@ from bs4 import BeautifulSoup
 import urllib2
 import re
 import cPickle
-import sys
+import shutil
 import os
 
 from article import article
 
 #resources: pythex.org for regex testing
 
-def main():
-    titles = open("title_list.csv", "r").read().split(',')
-    os.makedirs("./raw")
-    os.makedirs("../data")
 
-    for title in titles:
+def main():
+    raw_folder= "./raw/"
+    data_folder="./data/"
+
+    shutil.rmtree(raw_folder, ignore_errors=True)
+    shutil.rmtree(data_folder, ignore_errors=True)
+    
+    titles = open("title_list.csv", "r").read().split(',')
+    os.makedirs(raw_folder)
+    os.makedirs(data_folder)
+
+    ##TODO take all titles
+    for title in titles[0:100]:
         try:
             uri = "http://en.wikipedia.org/w/index.php?title="+title+"&action=edit"
             html_parsed = BeautifulSoup(urllib2.urlopen(uri).read().decode("utf8"))
+            
+            if "class=\"wikitable\"" in html_parsed: continue
             
             thisArticle = article()
             thisArticle.title = title
@@ -30,9 +40,10 @@ def main():
             inner_text_cleaned = inner_text_cleaned.encode('ascii', 'ignore')
             inner_text_cleaned = inner_text_cleaned.strip();
             
+            
             thisArticle.paras = inner_text_cleaned.split("\n\n")
             
-            section_splitter = re.compile("==(?P<section_name>.*?)==(?P<section_text>.*)")
+            section_splitter = re.compile("==[=]*(?P<section_name>.*?)[=]*==(?P<section_text>.*)")
             
             #todo find a better way to remove infobox
             if(thisArticle.paras[0].startswith("{{Infobox")):
@@ -52,10 +63,11 @@ def main():
                     thisArticle.sections[current_section] = []
                 thisArticle.sections[current_section].append(index)
                 
-            cPickle.dump(inner_text_noRev, open("./raw/"+title+".txt", "w+"))
-            cPickle.dump(thisArticle, open("../data/"+title+".dat", "w+"))
-        except:
+            cPickle.dump(inner_text_noRev, open(raw_folder+title+".txt", "wb"))
+            cPickle.dump(thisArticle, open(data_folder+title+".dat", "wb"))
+        except Exception as exp:
             print title
+            print "details: " +str(exp)
 
 if __name__ == "__main__":
     main()
