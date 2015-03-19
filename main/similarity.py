@@ -13,6 +13,7 @@ def counter_dot(A_vec, B_vec):
     B_l = list(B_vec)
     if(len(B_l)<len(A_l)): return counter_dot(B_vec, A_vec)
     return sum(B_vec.get(f, 0) * v for f, v in A_vec.items())
+
     #for word in A_l:
     #    result+= A_vec[word]*B_vec[word]
     #return result       
@@ -74,7 +75,7 @@ def text_similarity(text1, text2, use_tfidf, countertotal):
     vec2 = text2vec(text2, use_tfidf, countertotal)
     #print vec1, vec2
     #print vec_similarity(vec1, vec2)
-    return vec_similarity(vec1, vec2)
+    return vec_similarity(vec1, vec2) 
 
 #text2vec("This is a test. This is a test.")
 #text_similarity("this is a test", "something random")
