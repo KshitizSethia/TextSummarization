@@ -6,20 +6,17 @@ import shutil
 import os
 
 from article import article
-
+import settings
 # resources: pythex.org for regex testing
 
 
 def main():
-    raw_folder = "./raw/"
-    data_folder = "./data/"
-
-    shutil.rmtree(raw_folder, ignore_errors=True)
-    shutil.rmtree(data_folder, ignore_errors=True)
+    shutil.rmtree(settings.raw_folder, ignore_errors=True)
+    shutil.rmtree(settings.data_folder, ignore_errors=True)
     
     titles = open("title_list.csv", "r").read().split(',')
-    os.makedirs(raw_folder)
-    os.makedirs(data_folder)
+    os.makedirs(settings.raw_folder)
+    os.makedirs(settings.data_folder)
 
     # #TODO take all titles
     for title in titles[0:100]:
@@ -74,8 +71,8 @@ def main():
             for index in parasToRemove:
                 thisArticle.paras.pop(index)
 
-            cPickle.dump(inner_text_noRev, open(raw_folder + title + ".txt", "wb"))
-            cPickle.dump(thisArticle, open(data_folder + title + ".dat", "wb"))
+            cPickle.dump(inner_text_noRev, open(settings.raw_folder + title + ".txt", "wb"))
+            cPickle.dump(thisArticle, open(settings.data_folder + title + ".dat", "wb"))
         except Exception as exp:
             print title
             print "details: " + str(exp)

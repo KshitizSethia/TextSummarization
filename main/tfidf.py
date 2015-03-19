@@ -5,14 +5,15 @@ import re
 import os
 from collections import Counter
 
+import settings
+
 def calculate_global_frequency():
-	data_dir ="./data/"
 	countertotal = Counter()
 
-	for filename in os.listdir(data_dir):
+	for filename in os.listdir(settings.data_folder):
 		try:
 			counterdoc = Counter()
-			path = os.path.join(data_dir, filename)
+			path = os.path.join(settings.data_folder, filename)
 			thisArticle = cPickle.load(open(path,"rb"))
 			for para in thisArticle.paras:
 				para = re.sub('[~!@$%^&*()_+-=<>?,./;:\'\"{}\[\]\\|\n]','',para)
@@ -62,9 +63,8 @@ def tf(term,text):
 
 
 def tfidf(term, text, countertotal):
-	data_dir ="./data/"
 	#countertotal = cPickle.load(open("idf.dat","rb"))
-	num_of_docs = float(len(os.listdir(data_dir))) 
+	num_of_docs = float(len(os.listdir(settings.data_folder))) 
 	countertotal[term] += 1
 	if countertotal[term] == 0:
 		print "countertotal ", countertotal[term], " term ", term

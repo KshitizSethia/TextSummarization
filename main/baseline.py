@@ -7,8 +7,9 @@ import os
 import matplotlib.pyplot as plt
 import traceback
 
+import settings
+
 def main():
-    data_dir = "./data/"
     calculate_global_frequency()
     countertotal = cPickle.load(open("idf.dat","rb"))
 
@@ -22,10 +23,9 @@ def main():
 
     use_tfidf = 1
 
-    for filename in os.listdir(data_dir):
+    for filename in os.listdir(settings.data_folder):
         try:
-            #path = r"C:\Cloud\github\TextSummarization\main\data\Finance.dat"#os.path.join(data_dir, filename)#"C:\\Cloud\\github\\TextSummarization\\main\\data\\87th_Academy_Awards.dat"#
-            path = os.path.join(data_dir, filename)#"C:\\Cloud\\github\\TextSummarization\\main\\data\\87th_Academy_Awards.dat"#
+            path = os.path.join(settings.data_folder, filename)
             thisArticle = cPickle.load(open(path,"rb"))
             
             first_sentence_summary= ""
