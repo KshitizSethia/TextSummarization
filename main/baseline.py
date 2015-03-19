@@ -19,7 +19,7 @@ def main():
     y_axis_5 = []
     c = 1
 
-    use_tfidf = 0
+    use_tfidf = 1
 
     for filename in os.listdir(data_dir):
         try:
@@ -64,15 +64,17 @@ def main():
             full_article_result = (text_similarity(full_article_summary, actual_summary, use_tfidf, countertotal)) - math.sqrt(max(0.0, ((l_d - l_as)/(l_d - l_as))))
             avg_result = (first_sentence_result + two_sentence_result + second_sentence_result) / 3.0 ;
 
-            print thisArticle.title, '\t\t', first_sentence_result, " l_fs ", l_fs, " l_as ", l_as, " l_d", l_d, " value ", math.sqrt(max(0.0, ((l_fs - l_as)/(l_d - l_as))))
+            #print thisArticle.title, '\t\t', avg_result, " l_fs ", l_fs, " l_as ", l_as, " l_d", l_d, " value ", math.sqrt(max(0.0, ((l_fs - l_as)/(l_d - l_as))))
+            print thisArticle.title, '\t\t', avg_result
             
-            x_axis.append(thisArticle.title)
-            y_axis_1.append(first_sentence_result)
-            y_axis_2.append(second_sentence_result)
-            y_axis_3.append(two_sentence_result)
-            y_axis_4.append(full_article_result)
-            y_axis_5.append(avg_result)
-            
+            if avg_result > 0.3:
+                x_axis.append(thisArticle.title)
+                y_axis_1.append(first_sentence_result)
+                y_axis_2.append(second_sentence_result)
+                y_axis_3.append(two_sentence_result)
+                y_axis_4.append(full_article_result)
+                y_axis_5.append(avg_result)
+                
 
         except Exception as exp:
             #print filename
@@ -89,7 +91,7 @@ def main():
     plt.plot(y_axis_3, label='two')
     plt.plot(y_axis_4, label='full')
     plt.plot(y_axis_5, label='average of 3')
-    
+    print len(y_axis_1)
     plt.legend()
     plt.show()
 
