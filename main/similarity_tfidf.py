@@ -2,10 +2,8 @@ import nltk
 from nltk.corpus import stopwords
 import re
 from collections import Counter
-from tfidf import tfidf
-from tfidf import tf
-
 import math
+
 
 def counter_dot(A_vec, B_vec):
     result = 0
@@ -20,25 +18,16 @@ def counter_dot(A_vec, B_vec):
 def counter_mult(scalar, vector):
     return Counter(dict([(k, v*scalar) for (k, v) in vector.iteritems()]))
 
-def text2vec(text, use_tfidf, countertotal):
-    text = re.sub('[~!@$%^&*()_+-=<>?,./;:\'\"{}\[\]\\|\n]','',text)
+def text2vec(text):
+    text = re.sub('[~!@$%^&*()_+-=<>?,./;:\'\"{}\[\]\\|]','',text)
     tokens = nltk.word_tokenize(text)
     bigrams = Counter(zip(tokens,tokens[1:]))
     words = Counter(tokens)
-    vec = words
-    if use_tfidf==0:
-        #normalize
-        total = math.sqrt(sum(map(lambda x:x**2, vec.values())))
-        vec = counter_mult(1.0/total, vec)
-        return vec
-    else:
-        for v in vec.keys():
-            vec[v] = tfidf(v, text, countertotal)
-        total = math.sqrt(sum(map(lambda x:x**2, vec.values())))
-        vec = counter_mult(1.0/total, vec)
-        return vec
-
-
+    vec = bigrams+words
+    #normalize
+    total = math.sqrt(sum(map(lambda x:x**2, vec.values())))
+    vec = counter_mult(1.0/total, vec)
+    return vec
     
     '''
     tokens = nltk.word_tokenize(text)
@@ -69,9 +58,9 @@ def text2vec(text, use_tfidf, countertotal):
 def vec_similarity(vec1, vec2):
     return counter_dot(vec1, vec2)
 
-def text_similarity(text1, text2, use_tfidf, countertotal):
-    vec1 = text2vec(text1, use_tfidf, countertotal)
-    vec2 = text2vec(text2, use_tfidf, countertotal)
+def text_similarity(text1, text2):
+    vec1 = text2vec(text1)
+    vec2 = text2vec(text2)
     #print vec1, vec2
     #print vec_similarity(vec1, vec2)
     return vec_similarity(vec1, vec2)
