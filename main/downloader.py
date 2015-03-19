@@ -53,7 +53,7 @@ def main():
                                   "Discography", "Bibliography" ]
             
             current_section = "intro"
-            index_FirstUnwantedSection = 0
+            index_FirstUnwantedSection = len(thisArticle.paras)
             for index in range(len(thisArticle.paras)):
                 thisArticle.paras[index] = thisArticle.paras[index].strip()
                 

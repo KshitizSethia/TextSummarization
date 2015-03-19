@@ -5,9 +5,10 @@ import math
 import cPickle
 import os
 import matplotlib.pyplot as plt
+import traceback
 
 def main():
-    data_dir = "./data/data_4"
+    data_dir = "./data/"
     calculate_global_frequency()
     countertotal = cPickle.load(open("idf.dat","rb"))
 
@@ -34,6 +35,16 @@ def main():
             actual_summary = ""
             for section_name in thisArticle.sections.keys():
                 for para_index in thisArticle.sections[section_name]:
+                    try:
+                        thisArticle.paras[para_index]
+                    except:
+                        print "out of bounds error"
+                        print "\t", thisArticle.title
+                        print "\t", para_index
+                        print "\t", section_name
+                        print "\t", len(thisArticle.paras)
+                        print "\t", thisArticle.paras
+
                     if(section_name =="intro"):
                         actual_summary += thisArticle.paras[para_index]
                     else:
@@ -78,7 +89,9 @@ def main():
 
         except Exception as exp:
             #print filename
-            print "\terror: " +str(exp)
+            #print "\terror baseline: " +str(exp)
+            traceback.print_exc()
+
     print x_axis
     print y_axis_1
     print y_axis_2

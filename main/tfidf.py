@@ -6,7 +6,7 @@ import os
 from collections import Counter
 
 def calculate_global_frequency():
-	data_dir ="./data/data_4"
+	data_dir ="./data/"
 	countertotal = Counter()
 
 	for filename in os.listdir(data_dir):
@@ -26,7 +26,7 @@ def calculate_global_frequency():
 
 
 		except Exception as exp:
-			print "\terror: " + str(exp)
+			print "\terror tfidf: " + str(exp)
 
 	#print countertotal
 
@@ -62,7 +62,7 @@ def tf(term,text):
 
 
 def tfidf(term, text, countertotal):
-	data_dir ="./data/data_4"
+	data_dir ="./data/"
 	#countertotal = cPickle.load(open("idf.dat","rb"))
 	num_of_docs = float(len(os.listdir(data_dir))) 
 	countertotal[term] += 1
