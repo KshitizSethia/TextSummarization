@@ -1,0 +1,17 @@
+Team: Prasoon Goyal(pg1338), Sahil Goyal(sg4187), Kshitiz Sethia(ks3839)
+Objective: The aim of our project is to generate a method for automatic extractive summarization of articles.
+Data: We are using wikipedia as the dataset for our project. We have chosen the most frequently viewed wikipedia articles for our dataset as these are expected to be well written/maintained articles.
+Ideal Summary: We choose the introductory paragraphs as a human generated summary of the rest of the articles. This however is not true for all articles. Therefore, we take articles where the introduction has highest cosine similarity with the rest of the articles.
+Baseline: We are keeping the first sentence of every paragraph on a wikipedia article as a baseline summary.
+Pre-processing: We have a python script which downloads and extracts paragraphs by section from wikipedia articles.
+Metrics for performance: We are using the following metrics for comparison currently:
+	1) Cosine similarity with penalty for difference in lenght of two summaries. We use the following formula where both the cosine and the penalty term are bounded [0,1]:
+	
+	2) "Rouge" metric for similarity between two pieces of text. We have recieved the source code and executables, and are currently evaluating where/how to use this metric.
+Approaches being considered for extractive summarization:
+	1) Graph Methods for Sentence Importance
+		In the graph models inspired by the PageRank algorithm, the input is represented as a highly connected graph. Vertices represent sentences and edges between sentences are assigned weights equal to the similarity between the two sentences. The method most often used to compute similarity is cosine similarity with TF*IDF weights for words. Sometimes, instead of assigning weights to edges, the connections between vertices can be determined in a binary fashion: the vertices are connected only if the similarity between the two sentences exceeds a predefined threshold. Sentences that are related to many other sentences are likely to be central and would have high weight for selection in the summary.
+	2) KL Divergence of sentence from ideal summary.
+	3) We intend to find multiple measures of relevance for sentences in summary. We can then use machine learning to find out which measure is relevant.
+References:
+	1) A SURVEY OF TEXT SUMMARIZATION TECHNIQUES (Ani Nenkova, University of Pennsylvania)
