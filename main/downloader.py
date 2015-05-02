@@ -7,10 +7,14 @@ import os
 
 from article import article
 import settings
+import sys
 # resources: pythex.org for regex testing
 
 
 def main():
+    verbose = False
+    if('-v' in sys.argv): verbose = True
+    
     shutil.rmtree(settings.raw_folder, ignore_errors=True)
     shutil.rmtree(settings.data_folder, ignore_errors=True)
     
@@ -29,25 +33,34 @@ def main():
             thisArticle.title = title
             
             inner_text = html_parsed.textarea.string
-            inner_text_noRev = re.sub("{{.*?}}", "", inner_text)
+            inner_text = inner_text.encode('ascii', 'ignore')
+            rawFile = open(settings.raw_folder + title + ".txt", "w")
+            rawFile.write(inner_text)
+            
+            inner_text_noRev = re.sub("{{(.|\n)*?}}", "", inner_text)
             thisArticle.linked_titles = re.findall("\[\[(.*?)\]\]", inner_text_noRev)
             thisArticle.categories = re.findall("\[\[Category:(.*?)\]\]", inner_text_noRev)
             inner_text_cleaned = re.sub("\[\[(.*?)\]\]", r"\1", inner_text_noRev)
-            inner_text_cleaned = inner_text_cleaned.encode('ascii', 'ignore')
+            # remove <ref>*</ref> tags and <ref * /> tags
+            inner_text_cleaned = re.sub("<ref>(.|\n)*?</ref> | <ref (.|\n)*/>", "", inner_text_cleaned)
+            # inner_text_cleaned
             inner_text_cleaned = inner_text_cleaned.strip();
             
             
             thisArticle.paras = inner_text_cleaned.split("\n\n")
             
             # remove paragraphs with tables and infobox in them, not informative 
-            thisArticle.paras = filter(lambda x: x.find("wikitable")<0, thisArticle.paras)
+            thisArticle.paras = filter(lambda x: x.find("wikitable") < 0, thisArticle.paras)
             thisArticle.paras = filter(lambda x: not x.startswith("{{Infobox"), thisArticle.paras)
-           
+            
+            # remove empty paragraphs
+            thisArticle.paras = [para for para in thisArticle.paras if para.strip() != ""]
+            
             section_splitter = re.compile("==[=]*(?P<section_name>.*?)[=]*==(?P<section_text>.*)")
-        
-            unwanted_sections = ["References", "See also", "Notes", "Notes and references",\
-                                  "Further reading", "External links", "Works", "Publications",\
-                                  "Discography", "Bibliography" ]
+            
+            unwanted_sections = ["References", "See also", "Notes", "Notes and references", \
+                                 "Further reading", "External links", "Works", "Publications", \
+                                 "Discography", "Bibliography" ]
             
             current_section = "intro"
             index_FirstUnwantedSection = len(thisArticle.paras)
@@ -69,9 +82,16 @@ def main():
             parasToRemove = range(index_FirstUnwantedSection, len(thisArticle.paras))
             parasToRemove.reverse()
             for index in parasToRemove:
-                thisArticle.paras.pop(index)
-
-            cPickle.dump(inner_text_noRev, open(settings.raw_folder + title + ".txt", "wb"))
+               thisArticle.paras.pop(index)
+               
+            if(verbose):
+                print "---------------------START " + thisArticle.title + "---------------------"
+                for para in thisArticle.paras:
+                    print para
+                print inner_text_cleaned
+                print "---------------------END " + thisArticle.title + "---------------------"
+             
+            # cPickle.dump(inner_text_noRev, open(settings.raw_folder + title + ".txt", "wb"))
             cPickle.dump(thisArticle, open(settings.data_folder + title + ".dat", "wb"))
         except Exception as exp:
             print title
